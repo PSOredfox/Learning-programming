@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+echo "0=3.0嵌入版本，支持本地内部运算，无需环境支持，功能较少。不支持浮点运算。"
+sleep 0.5
+echo "1=4.0嵌入版本，必须环境支持，运算快，支持浮点运算。"
+
+while true; do
+    read -p "请输入数字0或者1,来切换运算模式" xuanxiang
+    if [[ "$xuanxiang" == "0" ]]; then
+         while true; do
+        # 漫长的写入步骤
+            sleep 0.5
+            RAM=()
+            echo "符号参考：+=*/"
+            sleep 0.5
+            read -p  "请输入算式：" Data_class
+            echo "正在将数据写入内存"
+            Data_class=$(echo "$Data_class" | tr -d $' \n\r')  #删掉多余字符
+            
+            
+            DATA0=${Data_class%%[-+*/]*} # 妈卖批，不要把减号放在两个符号中间！！不要把减号放在两个符号中间！！不要把减号放在两个符号中间！！！不要让傻逼bash把他当横杠处理了喂!（掐头）
+            RAM+=( "$DATA0" )
+        
+            
+            zhongjian=${Data_class#$DATA0} # 取尾（$zhonhjian变成残片了）
+            DATA1=${zhongjian:0:1} #取符号
+            
+            RAM+=( "$DATA1" )
+            DATA2=${zhongjian:1} # 取走最后一个字符
+            RAM+=( "$DATA2" )
+            
+            
+            sleep 1
+            echo "完成!"
+            sleep 0.5
+            echo "正在载入微处理器"
+            sleep 0.5
+            echo "完成!"
+            sleep 0.5
+            echo "正在计算."
+            sleep 1
+            echo "正在计算.."
+            sleep 1
+            echo "正在计算..."
+            sleep 0.5
+            
+        # 终于开始正餐环节了😋
+        # 先提取进变量
+            a=${RAM[0]}
+            b=${RAM[1]}
+            c=${RAM[2]}
+            
+        # 然后进行if判断,判断符号,以进行计算
+            if [[ "$b" == "+" ]]; then
+                Fine=$(( a + c ))
+            elif [[ "$b" == "-" ]]; then
+                Fine=$(( a - c ))
+            elif [[ "$b" == "*" ]]; then
+                Fine=$(( a * c ))
+            elif [[ "$b" == "/" ]]; then
+                Fine=$(( a / c ))
+            else
+                echo "错误，未知的计算符"
+                exit
+            fi
+            
+            
+            
+        # 让我们来取结果
+            echo "计算完成!结果为:$Fine"
+            sleep 1
+            echo "3"
+            sleep 1
+            echo "2"
+            sleep 1
+            echo "1"
+            sleep 0.5
+            echo "上次计算的结果将会存储至下一次的屏幕内,请放心😁"
+            sleep 0.5
+            sleep 0.3
+            clear
+            Fine2=$Fine
+            echo "您上次的计算结果是:$Fine2"
+            sleep 0.5
+            echo "按Ctrl+C以终止运行"
+            sleep 0.5
+        done
+    elif [[ "$xuanxiang" == "1" ]]; then
+        while true; do
+            sleep 0.5
+            if command -v pkg &> /dev/null; then # 检测当前环境是否支持pkg install安装命令
+                echo "完成" > /dev/null
+            else
+                echo "您当前环境不支持该计算功能，请使用0计算功能"
+                break 1
+            fi
+            
+            sleep 0.5
+            echo "符号参考：+=*/"
+            sleep 0.2
+            read -p "请输入算式：" DATA
+            while true; do
+                if [[ -z "$DATA" || "$DATA" == " " || "$DATA" == $'\n' || "$DATA" == $'\r'  || "$DATA" == "+" || "$DATA" == '-' || "$DATA" == '*' || "$DATA" == "/" || "$DATA" == "=" ]]; then
+                    echo "非法字符！，重新输入" 
+                    sleep 0.5
+                    read -p "重输：" clean_data
+                    DATA=$clean_data
+                    sleep 0.5
+                else
+                    break
+                fi                  # 判断是否有非法字符
+            done
+            
+            sleep 0.5
+            echo "正在写入内存"
+            sleep 1
+            echo "完成！"
+            sleep 0.5
+            echo "正在载入协处理器"
+            sleep 0.5
+            echo "完成！"
+            sleep 0.5
+            echo "正在运算."
+            sleep 0.3
+            echo "正在运算.."
+            sleep 0.3
+            echo "正在运算..."
+            sleep 3
+            
+            
+            while true; do
+                if command -v bc &> /dev/null; then # 检测bc
+                    jieguo=$(echo "scale=4; $DATA" | bc -l )
+                    break 1
+                else
+                    echo "您可能没有安装外置处理器，将自动为您安装"
+                    sleep 0.7
+                    pkg install -y bc
+                    clear
+                    
+                fi
+            done  
+            
+            # 输出
+            sleep 0.5 
+            echo "计算成功，结果为：$jieguo"
+            sleep 0.5
+            sleep 1
+            echo "3"
+            sleep 1
+            echo "2"
+            sleep 1
+            echo "1"
+            sleep 1
+            echo "上次计算的结果将会存储至下一次的屏幕内,请放心😁"
+            sleep 2
+            clear
+            sleep 0.5
+            xiayici=$jieguo
+            echo "您上次的结果为：$xiayici"
+            sleep 1
+            echo "输入Ctrl+C退出"
+        done
+    
+    else
+        echo "无法识别的字符"
+    fi
+done
