@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-＃ 优化了时间布局，优化了0/1切换模式，无需按下换行回车，自动执行
 echo "0=3.0嵌入版本，支持本地内部运算，无需环境支持，功能较少。不支持浮点运算。"
 sleep 0.5
 echo "1=4.0嵌入版本，必须环境支持，运算快，支持浮点运算。"
 
 while true; do
     read -n 1 -p "请输入数字0或者1,来切换运算模式（不需要键入换行符号）" xuanxiang
+    sleep 0.5
     echo " "
     if [[ "$xuanxiang" == "0" ]]; then
          while true; do
